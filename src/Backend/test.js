@@ -10,8 +10,6 @@ import {
 } from "firebase/firestore";
 import { db } from "./firebase";
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-import { signInWithRedirect } from "firebase/auth";
-import { async } from "@firebase/util";
 
 const provider = new GoogleAuthProvider();
 
@@ -28,12 +26,21 @@ const StyledTest = styled.section`
 	}
 `;
 
+// getRecipe {
+// docId: "QBTs4fsmVNfGxif325hs"
+// id: "7wCJf43l65R7TuXnUa5jLBzA6lZ2"
+// itemToBuy: []
+// myfridge: []
+// myrecipe: []
+// userName: ""
+// }
 const Test = () => {
+	const auth = getAuth();
 	const [user, setUser] = useState();
 	const [getUser, setGetUser] = useState([]);
-	const auth = getAuth();
+	const [getRecipe, setGetRecipe] = useState([]);
 	useEffect(() => {
-		const fetch = async () => {
+		const fetchUsers = async () => {
 			const querySnapshot = await getDocs(collection(db, "users"));
 			const newArr = [];
 			querySnapshot.forEach((doc) => {
@@ -41,9 +48,19 @@ const Test = () => {
 			});
 			setGetUser(newArr);
 		};
-		fetch();
-	}, []);
-	console.log(getUser);
+		const fetchRecipe = async () => {
+			const querySnapshot = await getDocs(collection(db, "recipe"));
+			const newArr = [];
+			querySnapshot.forEach((doc) => {
+				newArr.push({ data :doc.data(), docId: doc.id });
+			});
+			setGetRecipe(newArr);
+		};
+		fetchRecipe();
+		fetchUsers();
+	}, [user]);
+	console.log("userData",getUser);
+	console.log("RecipeData", getRecipe);
 	const googleAthu = () => {
 		// signInWithRedirect(auth, provider)
 		signInWithPopup(auth, provider)
@@ -61,21 +78,36 @@ const Test = () => {
 								userName: user.displayName,
 								userId: user.uid,
 							});
-            } else if (getUser.length > 0) {
-              console.log("else");
+							const docRefRecipe = await addDoc(collection(db, "recipe"), {
+								id: user.uid,
+								userName: user.displayName,
+								itemToBuy: [],
+								myfridge: [],
+								myrecipe: [],
+							});
+						} else if (getUser.length > 0) {
+							console.log("else");
 							const filtered = getUser.map((value) => {
 								return value.userId;
-              });
-              const checkedId = await filtered.find(value => value === user.id)
-              console.log("checking",checkedId);
+							});
+							console.log("filtered",filtered, "id", user.uid);
+							const checkedId = await filtered.find((value) => value === user.uid);
+							console.log("checking", checkedId);
 							if (checkedId === undefined) {
 								const docRef = await addDoc(collection(db, "users"), {
 									userName: user.displayName,
 									userId: user.uid,
 								});
-              } else {
-                console.log("account exists");
-              }
+								const docRefRecipe = await addDoc(collection(db, "recipe"), {
+									id: user.uid,
+									userName: user.displayName,
+									itemToBuy: [],
+									myfridge: [],
+									myrecipe: [],
+								});
+							} else {
+								console.log("account exists");
+							}
 						}
 					} catch (e) {
 						console.error("Error adding document: ", e);
@@ -103,24 +135,34 @@ const Test = () => {
 		e.preventDefault();
 		const item = fridgeRef.current.value;
 		setFridge([...fridge, item]);
-		fridgeAddFireBase({ name: item });
+		fridgeAddFireBase({
+			id: getUser[0].id,
+			userName: getUser[0].userName,
+			itemToBuy: [],
+			myfridge: [item],
+			myrecipe: [],
+		});
 	};
 	const handleSubmitRecipe = (e) => {
 		e.preventDefault();
 		const item = recipegeRef.current.value;
 		setRecipe([...recipe, item]);
-		recipeAddFireBase({ name: item });
+		recipeAddFireBase({
+			id: getUser[0].userId,
+			docId : getRecipe[0].docId,
+			userName: getUser[0].userName,
+			itemToBuy: [],
+			myfridge: [],
+			myrecipe: [item],
+		});
 	};
 
 	const recipeAddFireBase = async (recipe) => {
 		console.log("recipe", recipe);
 		try {
-			const docRef = await updateDoc(
-				doc(db, "recipe", "UFdoqj1eJHHM5bWrju1g"),
-				{
-					myrecipe: arrayUnion(recipe),
-				}
-			);
+			const docRef = await updateDoc(doc(db, "recipe", `${recipe.docId}`), {
+				myrecipe: arrayUnion(recipe.myrecipe[recipe.myrecipe.length - 1]),
+			});
 		} catch (e) {
 			console.error("Error adding document: ", e);
 		}
