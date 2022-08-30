@@ -6,10 +6,14 @@ import {
 	updateDoc,
 	arrayUnion,
 	doc,
+	query,
+	where,
 	getDocs,
+	setDoc,
 } from "firebase/firestore";
 import { db } from "./firebase";
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { async } from "@firebase/util";
 
 const provider = new GoogleAuthProvider();
 
@@ -36,31 +40,48 @@ const StyledTest = styled.section`
 // }
 const Test = () => {
 	const auth = getAuth();
-	const [user, setUser] = useState();
+	const [user, setUser] = useState({
+		data:[],
+		docId: "",
+	});
 	const [getUser, setGetUser] = useState([]);
 	const [getRecipe, setGetRecipe] = useState([]);
 	useEffect(() => {
-		const fetchUsers = async () => {
-			const querySnapshot = await getDocs(collection(db, "users"));
+		// const fetchUsers = async () => {
+		// 	const querySnapshot = await getDocs(collection(db, "users"));
+		// 	const newArr = [];
+		// 	querySnapshot.forEach((doc) => {
+		// 		newArr.push(doc.data());
+		// 	});
+		// 	setGetUser(newArr);
+		// };
+
+		const fetch = async () => {
+			const q = query(collection(db, "recipe"), where("id", "==", user.id));
+			console.log(q);
 			const newArr = [];
+			const querySnapshot = await getDocs(q);
 			querySnapshot.forEach((doc) => {
+				console.log(doc.data());
+				setUser({ data: doc.data(), docId: doc.id });
 				newArr.push(doc.data());
 			});
-			setGetUser(newArr);
 		};
 		const fetchRecipe = async () => {
 			const querySnapshot = await getDocs(collection(db, "recipe"));
 			const newArr = [];
 			querySnapshot.forEach((doc) => {
-				newArr.push({ data :doc.data(), docId: doc.id });
+				newArr.push({ data: doc.data(), docId: doc.id });
 			});
 			setGetRecipe(newArr);
 		};
 		fetchRecipe();
-		fetchUsers();
+		fetch();
+		// fetchUsers();
 	}, [user]);
-	console.log("userData",getUser);
+	console.log("userData", getUser);
 	console.log("RecipeData", getRecipe);
+	console.log("user", user);
 	const googleAthu = () => {
 		// signInWithRedirect(auth, provider)
 		signInWithPopup(auth, provider)
@@ -69,46 +90,41 @@ const Test = () => {
 				const token = credential.accessToken;
 				const user = result.user;
 				console.log(user);
-				setUser({ userName: user.displayName, userId: user.uid });
+				// setUser(user)
+				const fetch = async () => {
+					const q = query(
+						collection(db, "recipe"),
+						where("id", "==", user.uid)
+					);
+					console.log(q);
+					const newArr = [];
+					const querySnapshot = await getDocs(q);
+					querySnapshot.forEach((doc) => {
+						console.log(doc.data());
+						setUser({ data: doc.data(), docId: doc.id });
+						newArr.push(doc.data());
+					});
+					console.log(newArr);
+					if (newArr.length === 0) {
+						const docRefRecipe = await addDoc(collection(db, "recipe"), {
+							id: user.uid,
+							userName: user.displayName,
+							itemToBuy: [],
+							myfridge: [],
+							myrecipe: [],
+						});
+						setUser({
+							id: user.uid,
+							userName: user.displayName,
+							itemToBuy: [],
+							myfridge: [],
+							myrecipe: [],
+						});
+					}
+				};
 				const addUser = async () => {
 					try {
-						console.log(getUser);
-						if (getUser.length === 0) {
-							const docRef = await addDoc(collection(db, "users"), {
-								userName: user.displayName,
-								userId: user.uid,
-							});
-							const docRefRecipe = await addDoc(collection(db, "recipe"), {
-								id: user.uid,
-								userName: user.displayName,
-								itemToBuy: [],
-								myfridge: [],
-								myrecipe: [],
-							});
-						} else if (getUser.length > 0) {
-							console.log("else");
-							const filtered = getUser.map((value) => {
-								return value.userId;
-							});
-							console.log("filtered",filtered, "id", user.uid);
-							const checkedId = await filtered.find((value) => value === user.uid);
-							console.log("checking", checkedId);
-							if (checkedId === undefined) {
-								const docRef = await addDoc(collection(db, "users"), {
-									userName: user.displayName,
-									userId: user.uid,
-								});
-								const docRefRecipe = await addDoc(collection(db, "recipe"), {
-									id: user.uid,
-									userName: user.displayName,
-									itemToBuy: [],
-									myfridge: [],
-									myrecipe: [],
-								});
-							} else {
-								console.log("account exists");
-							}
-						}
+						fetch();
 					} catch (e) {
 						console.error("Error adding document: ", e);
 					}
@@ -135,22 +151,15 @@ const Test = () => {
 		e.preventDefault();
 		const item = fridgeRef.current.value;
 		setFridge([...fridge, item]);
-		fridgeAddFireBase({
-			id: getUser[0].id,
-			userName: getUser[0].userName,
-			itemToBuy: [],
-			myfridge: [item],
-			myrecipe: [],
-		});
 	};
 	const handleSubmitRecipe = (e) => {
 		e.preventDefault();
 		const item = recipegeRef.current.value;
 		setRecipe([...recipe, item]);
 		recipeAddFireBase({
-			id: getUser[0].userId,
-			docId : getRecipe[0].docId,
-			userName: getUser[0].userName,
+			id: user.data.id,
+			docId: user.docId,
+			userName: user.data.userName,
 			itemToBuy: [],
 			myfridge: [],
 			myrecipe: [item],
@@ -159,9 +168,24 @@ const Test = () => {
 
 	const recipeAddFireBase = async (recipe) => {
 		console.log("recipe", recipe);
+		const q = query(collection(db, "recipe"), where("id", "==", recipe.id));
+		console.log(q);
+		const querySnapshot = await getDocs(q);
+		const newArr = [];
+		querySnapshot.forEach((doc) => {
+			// doc.data() is never undefined for query doc snapshots
+			newArr.push(doc.data());
+			console.log(doc.id, " => ", doc.data());
+		});
+		console.log(newArr);
 		try {
-			const docRef = await updateDoc(doc(db, "recipe", `${recipe.docId}`), {
-				myrecipe: arrayUnion(recipe.myrecipe[recipe.myrecipe.length - 1]),
+			const docRef = await setDoc(doc(db, "recipe", `${recipe.docId}`), {
+				id: recipe.id,
+				docId: recipe.docId,
+				userName: recipe.userName,
+				itemToBuy: [...recipe.itemToBuy],
+				myfridge: [...recipe.myfridge],
+				myrecipe: [...recipe.myrecipe],
 			});
 		} catch (e) {
 			console.error("Error adding document: ", e);
@@ -170,12 +194,9 @@ const Test = () => {
 	const fridgeAddFireBase = async (item) => {
 		console.log("add fridge", item);
 		try {
-			const docRef = await updateDoc(
-				doc(db, "recipe", "UFdoqj1eJHHM5bWrju1g"),
-				{
-					myfridge: arrayUnion(item),
-				}
-			);
+			const docRef = await updateDoc(doc(db, "recipe", `${recipe.docId}`), {
+				myfridge: arrayUnion(item),
+			});
 		} catch (e) {
 			console.error("Error adding document: ", e);
 		}
@@ -184,12 +205,9 @@ const Test = () => {
 		console.log(item);
 
 		try {
-			const docRef = await updateDoc(
-				doc(db, "recipe", "UFdoqj1eJHHM5bWrju1g"),
-				{
-					myfridge: arrayUnion(item),
-				}
-			);
+			const docRef = await updateDoc(doc(db, "recipe", `${recipe.docId}`), {
+				myfridge: arrayUnion(item),
+			});
 		} catch (e) {
 			console.error("Error adding document: ", e);
 		}
