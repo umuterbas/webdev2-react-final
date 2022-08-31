@@ -244,3 +244,14 @@ const Test = () => {
 };
 
 export default Test;
+
+
+// {
+// 	id: recipe.id,
+// 	docId: recipe.docId,
+// 	userName: recipe.userName,
+// 	itemToBuy: [{obj}],
+// 	myfridge: [{obj}],
+// 	myrecipe: [{obj}],
+// 	}
+						
