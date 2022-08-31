@@ -1,10 +1,12 @@
 import './App.css';
 import Test from './Backend/test';
+import MyFridge from './Components/MyFridge';
 
 function App() {
   return (
     <div className="App">
-      <Test/>
+      {/* <Test/> */}
+    <MyFridge/>
     </div>
   );
 }
