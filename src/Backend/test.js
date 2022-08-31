@@ -151,24 +151,19 @@ const Test = () => {
 		e.preventDefault();
 		const item = fridgeRef.current.value;
 		setFridge([...fridge, item]);
+		fridgeAddFireBase(item);
+
 	};
 	const handleSubmitRecipe = (e) => {
 		e.preventDefault();
 		const item = recipegeRef.current.value;
 		setRecipe([...recipe, item]);
-		recipeAddFireBase({
-			id: user.data.id,
-			docId: user.docId,
-			userName: user.data.userName,
-			itemToBuy: [],
-			myfridge: [],
-			myrecipe: [item],
-		});
+		recipeAddFireBase(item);
 	};
 
 	const recipeAddFireBase = async (recipe) => {
 		console.log("recipe", recipe);
-		const q = query(collection(db, "recipe"), where("id", "==", recipe.id));
+		const q = query(collection(db, "recipe"), where("id", "==", user.data.id));
 		console.log(q);
 		const querySnapshot = await getDocs(q);
 		const newArr = [];
@@ -179,13 +174,13 @@ const Test = () => {
 		});
 		console.log(newArr);
 		try {
-			const docRef = await setDoc(doc(db, "recipe", `${recipe.docId}`), {
-				id: recipe.id,
-				docId: recipe.docId,
-				userName: recipe.userName,
-				itemToBuy: [...recipe.itemToBuy],
-				myfridge: [...recipe.myfridge],
-				myrecipe: [...recipe.myrecipe],
+			const docRef = await setDoc(doc(db, "recipe", `${user.docId}`), {
+				id: user.data.id,
+				docId: user.docId,
+				userName: user.data.userName,
+				itemToBuy: [...user.data.itemToBuy],
+				myfridge: [...user.data.myfridge],
+				myrecipe: [recipe],
 			});
 		} catch (e) {
 			console.error("Error adding document: ", e);
@@ -193,9 +188,25 @@ const Test = () => {
 	};
 	const fridgeAddFireBase = async (item) => {
 		console.log("add fridge", item);
+		console.log("recipe", recipe);
+		const q = query(collection(db, "recipe"), where("id", "==", user.data.id));
+		console.log(q);
+		const querySnapshot = await getDocs(q);
+		const newArr = [];
+		querySnapshot.forEach((doc) => {
+			// doc.data() is never undefined for query doc snapshots
+			newArr.push(doc.data());
+			console.log(doc.id, " => ", doc.data());
+		});
+		console.log(newArr);
 		try {
-			const docRef = await updateDoc(doc(db, "recipe", `${recipe.docId}`), {
-				myfridge: arrayUnion(item),
+			const docRef = await setDoc(doc(db, "recipe", `${user.docId}`), {
+				id: user.data.id,
+				docId: user.docId,
+				userName: user.data.userName,
+				itemToBuy: [...user.data.itemToBuy],
+				myfridge: [item],
+				myrecipe: [...user.data.myrecipe],
 			});
 		} catch (e) {
 			console.error("Error adding document: ", e);
@@ -203,10 +214,24 @@ const Test = () => {
 	};
 	const toBuyAddFireBase = async (item) => {
 		console.log(item);
-
+		console.log("recipe", recipe);
+		const q = query(collection(db, "recipe"), where("id", "==", user.data.id));
+		console.log(q);
+		const querySnapshot = await getDocs(q);
+		const newArr = [];
+		querySnapshot.forEach((doc) => {
+			newArr.push(doc.data());
+			console.log(doc.id, " => ", doc.data());
+		});
+		console.log(newArr);
 		try {
-			const docRef = await updateDoc(doc(db, "recipe", `${recipe.docId}`), {
-				myfridge: arrayUnion(item),
+			const docRef = await setDoc(doc(db, "recipe", `${user.docId}`), {
+				id: user.data.id,
+				docId: user.docId,
+				userName: user.data.userName,
+				itemToBuy: [item],
+				myfridge: [...user.data.myfridge],
+				myrecipe: [...user.data.myrecipe],
 			});
 		} catch (e) {
 			console.error("Error adding document: ", e);
