@@ -30,14 +30,6 @@ const StyledTest = styled.section`
 	}
 `;
 
-// getRecipe {
-// docId: "QBTs4fsmVNfGxif325hs"
-// id: "7wCJf43l65R7TuXnUa5jLBzA6lZ2"
-// itemToBuy: []
-// myfridge: []
-// myrecipe: []
-// userName: ""
-// }
 const Test = () => {
 	const auth = getAuth();
 	const [user, setUser] = useState({
@@ -47,15 +39,6 @@ const Test = () => {
 	const [getUser, setGetUser] = useState([]);
 	const [getRecipe, setGetRecipe] = useState([]);
 	useEffect(() => {
-		// const fetchUsers = async () => {
-		// 	const querySnapshot = await getDocs(collection(db, "users"));
-		// 	const newArr = [];
-		// 	querySnapshot.forEach((doc) => {
-		// 		newArr.push(doc.data());
-		// 	});
-		// 	setGetUser(newArr);
-		// };
-
 		const fetch = async () => {
 			const q = query(collection(db, "recipe"), where("id", "==", user.id));
 			console.log(q);
@@ -187,10 +170,7 @@ const Test = () => {
 		}
 	};
 	const fridgeAddFireBase = async (item) => {
-		console.log("add fridge", item);
-		console.log("recipe", recipe);
 		const q = query(collection(db, "recipe"), where("id", "==", user.data.id));
-		console.log(q);
 		const querySnapshot = await getDocs(q);
 		const newArr = [];
 		querySnapshot.forEach((doc) => {
@@ -198,7 +178,6 @@ const Test = () => {
 			newArr.push(doc.data());
 			console.log(doc.id, " => ", doc.data());
 		});
-		console.log(newArr);
 		try {
 			const docRef = await setDoc(doc(db, "recipe", `${user.docId}`), {
 				id: user.data.id,
@@ -213,8 +192,6 @@ const Test = () => {
 		}
 	};
 	const toBuyAddFireBase = async (item) => {
-		console.log(item);
-		console.log("recipe", recipe);
 		const q = query(collection(db, "recipe"), where("id", "==", user.data.id));
 		console.log(q);
 		const querySnapshot = await getDocs(q);
@@ -223,7 +200,6 @@ const Test = () => {
 			newArr.push(doc.data());
 			console.log(doc.id, " => ", doc.data());
 		});
-		console.log(newArr);
 		try {
 			const docRef = await setDoc(doc(db, "recipe", `${user.docId}`), {
 				id: user.data.id,
