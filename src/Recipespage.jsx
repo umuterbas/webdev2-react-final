@@ -1,4 +1,5 @@
 import fakeData from "./fakeData";
+import fakeDataFridge from "./fakeDataFridge";
 import React, { useEffect, useState } from "react";
 // import axios from "axios";
 import "./Recipespage.css";
@@ -7,9 +8,10 @@ import "./Recipespage.css";
 const Recipespage = () => {
   const [cards, setCards] = useState();
   const [searchTerm, setSearchTerm] = useState("");
+  const [checkBox, setCheckBox] = useState();
 
   const getData = () => {
-    setCards(fakeData)
+    setCards(fakeData);
     // axios
     //   .get(
     //     "https://api.spoonacular.com/recipes/complexSearch?query=&number=50&apiKey=fa8a9d46ee714e2bbd0da09419e280e6"
@@ -29,8 +31,13 @@ const Recipespage = () => {
     //   });
   };
 
+  const getFridgeItems = () => {
+    setCheckBox(fakeDataFridge);
+  };
+
   useEffect(() => {
     getData();
+    getFridgeItems();
   }, []);
 
   const handleCheckbox = (event) => {
@@ -39,77 +46,62 @@ const Recipespage = () => {
 
   return (
     <>
-    <div>
       <div>
-        <input
-          type="text"
-          placeholder="Search.."
-          onChange={(event) => {
-            setSearchTerm(event.target.value);
-          }}
-        />
+        <div>
+          <input
+            className="search_bar"
+            type="text"
+            placeholder="Search.."
+            onChange={(event) => {
+              setSearchTerm(event.target.value);
+            }}
+          />
+        </div>
+        <div>
+          {checkBox &&
+            checkBox.map((foods, i) => {
+              return (
+                <>
+                  <input
+                    key={i}
+                    className="check_boxes"
+                    onChange={handleCheckbox}
+                    type="checkbox"
+                    id={foods.name}
+                    name={foods.name}
+                    value={foods.name}
+                  />
+                  <label for={foods.name}> {foods.name} </label>
+                </>
+              );
+            })}
+        </div>
+        <div className="cards">
+          {cards &&
+            cards
+              .filter((item) => {
+                if (searchTerm === "") {
+                  return item;
+                } else if (
+                  item.title.toLowerCase().includes(searchTerm.toLowerCase())
+                ) {
+                  return item;
+                }
+              })
+              .map((item, index) => {
+                return (
+                  <div key={index} className="card">
+                    <p>{item.title}</p>
+                    <img src={item.image} alt="" />
+                    <div>
+                      <button>More</button>
+                      <button>Add</button>
+                    </div>
+                  </div>
+                );
+              })}
+        </div>
       </div>
-      <div>
-        <input
-          onChange={handleCheckbox}
-          type="checkbox"
-          id="1"
-          name="1"
-          value="1"
-        />
-        <label for="1"> 1</label>
-        <input
-          onChange={handleCheckbox}
-          type="checkbox"
-          id="2"
-          name="2"
-          value="2"
-        />
-        <label for="2"> 2</label>
-        <input
-          onChange={handleCheckbox}
-          type="checkbox"
-          id="3"
-          name="3"
-          value="3"
-        />
-        <label for="3"> 3</label>
-        <input
-          onChange={handleCheckbox}
-          type="checkbox"
-          id="4"
-          name="4"
-          value="4"
-        />
-        <label for="4"> 4</label>
-      </div>
-      <div className="cards">
-      {cards &&
-        cards
-          .filter((item) => {
-            if (searchTerm === "") {
-              return item;
-            } else if (
-              item.title.toLowerCase().includes(searchTerm.toLowerCase())
-            ) {
-              return item;
-            }
-          })
-          .map((item, index) => {
-            return (
-              <div key={index} className="card">
-                <p>{item.title}</p>
-                <img src={item.image} alt="" />
-                <div>
-                  <button>More</button>
-                  <button>Add</button>
-                </div>
-                </div>
-              
-            );
-          })}
-          </div>
-    </div>
     </>
   );
 };
