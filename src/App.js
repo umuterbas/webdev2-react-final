@@ -1,5 +1,5 @@
 import "./App.css";
-
+import MyRecipes from "./Components/RecipeCard/MyRecipesBar(RightSection)/MyRecipes";
 import Recipespage from "./Components/RecipeCard/MidSection/Recipespage";
 import Test from "./Backend/test";
 import MyFridge from "./Components/MyFridgeList/MyFridge";
@@ -17,6 +17,8 @@ function App() {
         </Router>
       </AuthContextProvider>
 
+      <Recipespage />
+      {/* <MyRecipes /> */}
       {/* <Test/> */}
       {/* <Recipespage /> */}
       {/* <MyFridge /> */}
