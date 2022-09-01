@@ -4,7 +4,11 @@ const fakeDataFridge = [
   },
   {
     name: "Chicken"
+  },
+  {
+    name: "Pasta"
   }
+
 ];
 
 export default fakeDataFridge;

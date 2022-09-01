@@ -1,7 +1,7 @@
-import fakeData from "./fakeData";
+// import fakeData from "./fakeData";
 import fakeDataFridge from "./fakeDataFridge";
 import React, { useEffect, useState } from "react";
-// import axios from "axios";
+import axios from "axios";
 import "./Recipespage.css";
 // import { MidPart } from "./Recipespage.styled";
 
@@ -9,26 +9,38 @@ const Recipespage = () => {
   const [cards, setCards] = useState();
   const [searchTerm, setSearchTerm] = useState("");
   const [checkBox, setCheckBox] = useState();
+  const [checkBoxValue, setCheckBoxValue] = useState("");
+  const [checked,setChecked] = useState(false)
 
+  const handleCheckbox = (event) => {
+    setChecked(!checked)
+    const val = !checked ? event.target.value : ""
+    console.log(val);
+    console.log("test const", checkBoxValue);
+    setCheckBoxValue(!checked ? event.target.value : "");
+    // setCheckBoxValue(event.target.value);
+  };
+  
+  
   const getData = () => {
-    setCards(fakeData);
-    // axios
-    //   .get(
-    //     "https://api.spoonacular.com/recipes/complexSearch?query=&number=50&apiKey=fa8a9d46ee714e2bbd0da09419e280e6"
-    //   )
-    //   .then(function (response) {
-    //     // handle success
-    //     console.log(response.data.results);
-    //     console.log(response.data);
-    //     setCards(response.data.results);
-    //   })
-    //   .catch(function (error) {
-    //     // handle error
-    //     console.log(error);
-    //   })
-    //   .then(function () {
-    //     // always executed
-    //   });
+    // setCards(fakeData);
+    axios
+      .get(
+        `https://api.spoonacular.com/recipes/complexSearch?query=${checkBoxValue}&number=50&apiKey=fa8a9d46ee714e2bbd0da09419e280e6`
+      )
+      .then(function (response) {
+        // handle success
+        console.log(response.data.results);
+        console.log(response.data);
+        setCards(response.data.results);
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      })
+      .then(function () {
+        // always executed
+      });
   };
 
   const getFridgeItems = () => {
@@ -38,11 +50,8 @@ const Recipespage = () => {
   useEffect(() => {
     getData();
     getFridgeItems();
-  }, []);
+  }, [checkBoxValue]);
 
-  const handleCheckbox = (event) => {
-    console.log(event.target.value);
-  };
 
   return (
     <>
