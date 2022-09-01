@@ -11,7 +11,7 @@ div {
 .card {
   background-color: #00b4cc;
   border-radius: 25px;
-  max-width: 50%;
+  max-width: 18rem;
   height: auto;
   padding: 2%;
 }
@@ -55,7 +55,7 @@ button {
   background-color: #4caf50; /* Green */
   border: none;
   color: white;
-  padding: 10px 24px;
+  padding: 0.5rem 1rem;
   text-align: center;
   text-decoration: none;
   display: inline-block;
