@@ -1,6 +1,6 @@
 import "./App.css";
 
-import Recipespage from "./Recipespage";
+import Recipespage from "./Components/RecipeCard/Recipespage";
 
 import Test from "./Backend/test";
 import MyFridge from "./Components/MyFridgeList/MyFridge";
@@ -8,9 +8,9 @@ import MyFridge from "./Components/MyFridgeList/MyFridge";
 function App() {
   return (
     <div className="App">
-      // <Recipespage />
+      <Recipespage />
       {/* <Test/> */}
-      <MyFridge />
+      {/* <MyFridge /> */}
     </div>
   );
 }
