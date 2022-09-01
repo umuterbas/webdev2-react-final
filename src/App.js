@@ -1,6 +1,6 @@
 import './App.css';
 import Test from './Backend/test';
-import MyFridge from './Components/MyFridge';
+import MyFridge from './Components/MyFridgeList/MyFridge';
 
 function App() {
   return (

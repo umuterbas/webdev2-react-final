@@ -1,7 +1,6 @@
 import React from "react";
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { database } from "../firebase-config";
 
 export default function MyFridge() {
 	const [query, setQuery] = useState("");
@@ -10,8 +9,6 @@ export default function MyFridge() {
 	const [ingredientId, setIngredientId] = useState("");
 	const [ingredientImage, setIngredientImage] = useState("");
 	const [fridgeList, setFridgeList] = useState([]);
-
-    const postCollectionRef = database("recipe");
 
 	useEffect(() => {
 		const loadIngredients = async () => {
