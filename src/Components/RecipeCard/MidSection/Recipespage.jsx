@@ -3,6 +3,7 @@ import fakeDataFridge from "./fakeDataFridge";
 import React, { useEffect, useState } from "react";
 // import axios from "axios";
 import "./Recipespage.css";
+import MyRecipes from "../MyRecipesBar(RightSection)/MyRecipes";
 // import { MidPart } from "./Recipespage.styled";
 
 const Recipespage = () => {
@@ -10,18 +11,18 @@ const Recipespage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [checkBox, setCheckBox] = useState();
   const [checkBoxValue, setCheckBoxValue] = useState("");
-  const [checked,setChecked] = useState(false)
+  const [checked, setChecked] = useState(false);
+  const [recipes, setRecipes] = useState([]);
 
   const handleCheckbox = (event) => {
-    setChecked(!checked)
-    const val = !checked ? event.target.value : ""
+    setChecked(!checked);
+    const val = !checked ? event.target.value : "";
     console.log(val);
     console.log("test const", checkBoxValue);
     setCheckBoxValue(!checked ? event.target.value : "");
     // setCheckBoxValue(event.target.value);
   };
-  
-  
+
   const getData = () => {
     // console.log(process.env.REACT_APP_APIKEY)
     setCards(fakeData);
@@ -53,11 +54,18 @@ const Recipespage = () => {
     getFridgeItems();
   }, [checkBoxValue]);
 
+  const handleToAdd = (item) => {
+    // update to array and add item to array
+    if (!recipes.includes(item)) {
+      
+      setRecipes((prev) => [...prev, item]);
+    }
+  };
 
   return (
     <>
-      <div>
-        <div>
+      <div className="all_div">
+        <div className="all_div">
           <input
             className="search_bar"
             type="text"
@@ -67,7 +75,7 @@ const Recipespage = () => {
             }}
           />
         </div>
-        <div>
+        <div className="all_div">
           {checkBox &&
             checkBox.map((foods, i) => {
               return (
@@ -81,12 +89,12 @@ const Recipespage = () => {
                     name={foods.name}
                     value={foods.name}
                   />
-                  <label for={foods.name}> {foods.name} </label>
+                  <label className=".labels" for={foods.name}> {foods.name} </label>
                 </>
               );
             })}
         </div>
-        <div className="cards">
+        <div className="cards all_div" >
           {cards &&
             cards
               .filter((item) => {
@@ -100,17 +108,18 @@ const Recipespage = () => {
               })
               .map((item, index) => {
                 return (
-                  <div key={index} className="card">
+                  <div key={index} className="card all_div">
                     <p>{item.title}</p>
-                    <img src={item.image} alt="" />
-                    <div>
-                      <button>More</button>
-                      <button>Add</button>
+                    <img  className="recipe_imgs" src={item.image} alt="" />
+                    <div className="all_div">
+                      <button className="card_buttons">More</button>
+                      <button className="card_buttons" onClick={() => handleToAdd(item)}>Add</button>
                     </div>
                   </div>
                 );
               })}
         </div>
+        <MyRecipes recipes={recipes} />
       </div>
     </>
   );
