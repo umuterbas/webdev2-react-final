@@ -1,7 +1,7 @@
-// import fakeData from "./fakeData";
+import fakeData from "./fakeData";
 import fakeDataFridge from "./fakeDataFridge";
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+// import axios from "axios";
 import "./Recipespage.css";
 // import { MidPart } from "./Recipespage.styled";
 
@@ -23,24 +23,25 @@ const Recipespage = () => {
   
   
   const getData = () => {
-    // setCards(fakeData);
-    axios
-      .get(
-        `https://api.spoonacular.com/recipes/complexSearch?query=${checkBoxValue}&number=50&apiKey=fa8a9d46ee714e2bbd0da09419e280e6`
-      )
-      .then(function (response) {
-        // handle success
-        console.log(response.data.results);
-        console.log(response.data);
-        setCards(response.data.results);
-      })
-      .catch(function (error) {
-        // handle error
-        console.log(error);
-      })
-      .then(function () {
-        // always executed
-      });
+    // console.log(process.env.REACT_APP_APIKEY)
+    setCards(fakeData);
+    // axios
+    //   .get(
+    //     `https://api.spoonacular.com/recipes/complexSearch?query=${checkBoxValue}&number=50&apiKey=fa8a9d46ee714e2bbd0da09419e280e6`
+    //   )
+    //   .then(function (response) {
+    //     // handle success
+    //     console.log(response.data.results);
+    //     console.log(response.data);
+    //     setCards(response.data.results);
+    //   })
+    //   .catch(function (error) {
+    //     // handle error
+    //     console.log(error);
+    //   })
+    //   .then(function () {
+    //     // always executed
+    //   });
   };
 
   const getFridgeItems = () => {
