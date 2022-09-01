@@ -1,10 +1,16 @@
-import './App.css';
-import Recipespage from './Recipespage';
+import "./App.css";
+
+import Recipespage from "./Recipespage";
+
+import Test from "./Backend/test";
+import MyFridge from "./Components/MyFridgeList/MyFridge";
 
 function App() {
   return (
     <div className="App">
-      <Recipespage />
+      // <Recipespage />
+      {/* <Test/> */}
+      <MyFridge />
     </div>
   );
 }
