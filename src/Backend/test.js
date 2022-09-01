@@ -12,7 +12,12 @@ import {
 	setDoc,
 } from "firebase/firestore";
 import { db } from "./firebase";
-import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import {
+	getAuth,
+	signInWithPopup,
+	GoogleAuthProvider,
+	onAuthStateChanged,
+} from "firebase/auth";
 import { async } from "@firebase/util";
 
 const provider = new GoogleAuthProvider();
@@ -33,23 +38,31 @@ const StyledTest = styled.section`
 const Test = () => {
 	const auth = getAuth();
 	const [user, setUser] = useState({
-		data:[],
+		data: [],
 		docId: "",
 	});
 	const [getUser, setGetUser] = useState([]);
 	const [getRecipe, setGetRecipe] = useState([]);
 	useEffect(() => {
-		const fetch = async () => {
-			const q = query(collection(db, "recipe"), where("id", "==", user.id));
-			console.log(q);
-			const newArr = [];
-			const querySnapshot = await getDocs(q);
-			querySnapshot.forEach((doc) => {
-				console.log(doc.data());
-				setUser({ data: doc.data(), docId: doc.id });
-				newArr.push(doc.data());
-			});
-		};
+		const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+			// setUser(currentUser);
+			console.log("test", currentUser);
+			const fetch = async () => {
+				const q = query(
+					collection(db, "recipe"),
+					where("id", "==", currentUser.uid)
+				);
+				console.log(q);
+				const newArr = [];
+				const querySnapshot = await getDocs(q);
+				querySnapshot.forEach((doc) => {
+					// console.log(doc.data());
+					setUser({ data: doc.data(), docId: doc.id });
+					newArr.push(doc.data());
+				});
+			};
+			fetch();
+		});
 		const fetchRecipe = async () => {
 			const querySnapshot = await getDocs(collection(db, "recipe"));
 			const newArr = [];
@@ -58,13 +71,13 @@ const Test = () => {
 			});
 			setGetRecipe(newArr);
 		};
+		unsubscribe();
 		fetchRecipe();
-		fetch();
 		// fetchUsers();
-	}, [user]);
-	console.log("userData", getUser);
-	console.log("RecipeData", getRecipe);
-	console.log("user", user);
+	}, []);
+	// console.log("userData", getUser);
+	// console.log("RecipeData", getRecipe);
+	// console.log("user", user);
 	const googleAthu = () => {
 		// signInWithRedirect(auth, provider)
 		signInWithPopup(auth, provider)
@@ -135,7 +148,6 @@ const Test = () => {
 		const item = fridgeRef.current.value;
 		setFridge([...fridge, item]);
 		fridgeAddFireBase(item);
-
 	};
 	const handleSubmitRecipe = (e) => {
 		e.preventDefault();
@@ -246,7 +258,6 @@ const Test = () => {
 
 export default Test;
 
-
 // {
 // 	id: recipe.id,
 // 	docId: recipe.docId,
@@ -255,4 +266,3 @@ export default Test;
 // 	myfridge: [{obj}],
 // 	myrecipe: [{obj}],
 // 	}
-						

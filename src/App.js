@@ -17,8 +17,8 @@ function App() {
         </Router>
       </AuthContextProvider>
 
-      <Recipespage />
       {/* <Test/> */}
+      {/* <Recipespage /> */}
       {/* <MyFridge /> */}
     </div>
   );
