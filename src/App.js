@@ -1,6 +1,6 @@
 import "./App.css";
 
-import Recipespage from "./Components/RecipeCard/Recipespage";
+import Recipespage from "./Components/RecipeCard/MidSection/Recipespage";
 
 import Test from "./Backend/test";
 import MyFridge from "./Components/MyFridgeList/MyFridge";
