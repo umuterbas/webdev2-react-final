@@ -34,7 +34,7 @@ const Nav = () => {
          </h3>
          <div className='links'>
             <Link className='link' to='/recipes'>Recipes</Link>
-            <Link className='link' to='/MyshoppingList'>My Shopping List</Link>
+            {user?.displayName ? <Link className='link' to='/MyshoppingList'>My Shopping List</Link> : ""}
             
             <div className='login'>
                {user?.displayName ? <button onClick={handleSignOut}>Logout</button> : <button onClick={handleSignIn}>LogIn</button>}
