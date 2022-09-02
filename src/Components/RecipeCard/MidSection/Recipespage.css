@@ -89,7 +89,7 @@
 
 .all_part_u {
   display: flex;
-  flex: 3fr 3fr;
+  flex: 1 1;
 }
 
 .right_part_u{

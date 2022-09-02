@@ -10,25 +10,34 @@ const Recipespage = () => {
   const [cards, setCards] = useState();
   const [searchTerm, setSearchTerm] = useState("");
   const [checkBox, setCheckBox] = useState();
-  const [checkBoxValue, setCheckBoxValue] = useState("");
+  const [checkBoxValue, setCheckBoxValue] = useState([]);
   const [checked, setChecked] = useState(false);
   const [recipes, setRecipes] = useState([]);
 
-  const handleCheckbox = (event) => {
-    setChecked(!checked);
-    const val = !checked ? event.target.value : "";
-    console.log(val);
-    console.log("test const", checkBoxValue);
-    setCheckBoxValue(!checked ? event.target.value : "");
-    // setCheckBoxValue(event.target.value);
+  const handleCheckbox = (food) => {
+    if (!checkBoxValue.includes(food)) {
+      setCheckBoxValue((prev) => [...prev, food]);
+    }else{
+      let newRecipes = checkBoxValue.filter((item, index) => {
+        if (item !== food) {
+          return item;
+        }
+      });
+      setCheckBoxValue(newRecipes);
+    }
   };
 
-  const getData = () => {
+  useEffect(() => {
+    // console.log(checkBoxValue.toString());
+    getData(checkBoxValue.toString())
+  }, [checkBoxValue])
+
+  const getData = (checkboxElements) => {
     // console.log(process.env.REACT_APP_APIKEY)
     setCards(fakeData);
     // axios
     //   .get(
-    //     `https://api.spoonacular.com/recipes/complexSearch?query=${checkBoxValue}&number=50&apiKey=fa8a9d46ee714e2bbd0da09419e280e6`
+    //     `https://api.spoonacular.com/recipes/complexSearch?query=${checkboxElements}&number=50&apiKey=fa8a9d46ee714e2bbd0da09419e280e6`
     //   )
     //   .then(function (response) {
     //     // handle success
@@ -52,7 +61,7 @@ const Recipespage = () => {
   useEffect(() => {
     getData();
     getFridgeItems();
-  }, [checkBoxValue]);
+  }, []);
 
   const handleToAdd = (item) => {
     // update to array and add item to array
@@ -87,6 +96,17 @@ const Recipespage = () => {
           />
         </div>
         <div className="all_div">
+          <form>
+          {/* <form method="post" action="/Tests/Post/">       */}
+    {/* <fieldset>      
+        <legend>What is Your Favorite Pet?</legend>      
+        <input type="checkbox" name="favorite_pet" value="Cats">Cats<br>      
+        <input type="checkbox" name="favorite_pet" value="Dogs">Dogs<br>      
+        <input type="checkbox" name="favorite_pet" value="Birds">Birds<br>      
+        <br>      
+        <input type="submit" value="Submit now" />      
+    </fieldset>      
+</form> */}
           {checkBox &&
             checkBox.map((foods, i) => {
               return (
@@ -94,7 +114,7 @@ const Recipespage = () => {
                   <input
                     key={i}
                     className="check_boxes"
-                    onChange={handleCheckbox}
+                    onChange={() => handleCheckbox(foods.name)}
                     type="checkbox"
                     id={foods.name}
                     name={foods.name}
@@ -107,6 +127,7 @@ const Recipespage = () => {
                 </>
               );
             })}
+            </form>
         </div>
         <div className="cards all_div">
           {cards &&

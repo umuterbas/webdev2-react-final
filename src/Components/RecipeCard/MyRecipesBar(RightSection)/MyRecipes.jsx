@@ -4,7 +4,7 @@ import "./MyRecipes.css";
 const MyRecipes = ({ recipes, deletingRecipe }) => {
   return (
     <>
-      <div className="all_div">
+      <div className="right_part_uu">
         <h2>My Recipes</h2>
 
         <ul>
