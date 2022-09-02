@@ -12,12 +12,12 @@ function App() {
   return (
     <div className="App">
       <Recipespage />    
-      <Recipes />
+      {/* <Recipes />
       <AuthContextProvider>
         <Router>
           <Nav />
         </Router>
-      </AuthContextProvider>
+      </AuthContextProvider> */}
       {/* <MyRecipes /> */}
       {/* <Test/> */}
       {/* <Recipespage /> */}

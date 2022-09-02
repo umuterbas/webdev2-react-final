@@ -1,7 +1,7 @@
-import fakeData from "./fakeData";
+// import fakeData from "./fakeData";
 import fakeDataFridge from "./fakeDataFridge";
 import React, { useEffect, useState } from "react";
-// import axios from "axios";
+import axios from "axios";
 import "./Recipespage.css";
 import MyRecipes from "../MyRecipesBar(RightSection)/MyRecipes";
 // import { MidPart } from "./Recipespage.styled";
@@ -11,7 +11,7 @@ const Recipespage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [checkBox, setCheckBox] = useState();
   const [checkBoxValue, setCheckBoxValue] = useState([]);
-  const [checked, setChecked] = useState(false);
+  // const [checked, setChecked] = useState(false);
   const [recipes, setRecipes] = useState([]);
 
   const handleCheckbox = (food) => {
@@ -34,24 +34,24 @@ const Recipespage = () => {
 
   const getData = (checkboxElements) => {
     // console.log(process.env.REACT_APP_APIKEY)
-    setCards(fakeData);
-    // axios
-    //   .get(
-    //     `https://api.spoonacular.com/recipes/complexSearch?query=${checkboxElements}&number=50&apiKey=fa8a9d46ee714e2bbd0da09419e280e6`
-    //   )
-    //   .then(function (response) {
-    //     // handle success
-    //     console.log(response.data.results);
-    //     console.log(response.data);
-    //     setCards(response.data.results);
-    //   })
-    //   .catch(function (error) {
-    //     // handle error
-    //     console.log(error);
-    //   })
-    //   .then(function () {
-    //     // always executed
-    //   });
+    // setCards(fakeData);
+    axios
+      .get(
+        `https://api.spoonacular.com/recipes/complexSearch?query=${checkboxElements}&number=50&apiKey=${process.env.REACT_APP_APIKEY_SPOONCULAR}`
+      )
+      .then(function (response) {
+        // handle success
+        console.log(response.data.results);
+        console.log(response.data);
+        setCards(response.data.results);
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      })
+      .then(function () {
+        // always executed
+      });
   };
 
   const getFridgeItems = () => {
@@ -112,7 +112,6 @@ const Recipespage = () => {
               return (
                 <>
                   <input
-                    key={i}
                     className="check_boxes"
                     onChange={() => handleCheckbox(foods.name)}
                     type="checkbox"
@@ -124,7 +123,7 @@ const Recipespage = () => {
                     {" "}
                     {foods.name}{" "}
                   </label>
-                </>
+                  </>
               );
             })}
             </form>
