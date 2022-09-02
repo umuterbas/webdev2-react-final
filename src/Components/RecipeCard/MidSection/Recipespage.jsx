@@ -11,7 +11,7 @@ const Recipespage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [checkBox, setCheckBox] = useState();
   const [checkBoxValue, setCheckBoxValue] = useState([]);
-  const [checked, setChecked] = useState(false);
+  // const [checked, setChecked] = useState(false);
   const [recipes, setRecipes] = useState([]);
 
   const handleCheckbox = (food) => {
