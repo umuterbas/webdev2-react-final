@@ -4,7 +4,7 @@ import "./MyRecipes.css";
 const MyRecipes = ({ recipes, deletingRecipe }) => {
   return (
     <>
-      <div>
+      <div className="all_div">
         <h2>My Recipes</h2>
 
         <ul>
@@ -14,7 +14,7 @@ const MyRecipes = ({ recipes, deletingRecipe }) => {
                 <>
                   <li className="recipes_list" key={index}>
                     <p>{item.title}</p>
-                    <button onClick={() => deletingRecipe(item.id)}>Del</button>
+                   <i onClick={() => deletingRecipe(item.id)} class="fa-solid fa-trash-can"></i>
                   </li>
                 </>
               );

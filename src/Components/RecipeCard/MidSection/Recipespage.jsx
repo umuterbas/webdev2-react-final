@@ -74,6 +74,7 @@ const Recipespage = () => {
 
   return (
     <>
+    <div className="all_part_u all_div">
       <div className="all_div">
         <div className="all_div">
           <input
@@ -138,8 +139,9 @@ const Recipespage = () => {
               })}
         </div>
       </div>
-      <div>
+      <div className="right_part_u">
         <MyRecipes recipes={recipes} deletingRecipe={deletingRecipe} />
+      </div>
       </div>
     </>
   );

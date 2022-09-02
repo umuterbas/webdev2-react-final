@@ -1,3 +1,9 @@
 .recipes_list {
     display: flex;
+    padding: 0.5% 0 0.5% 0;
+}
+
+.fa-trash-can {
+    cursor: pointer;
+    margin-left: 1%;
 }
