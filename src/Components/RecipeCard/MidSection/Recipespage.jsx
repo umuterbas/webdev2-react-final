@@ -57,7 +57,6 @@ const Recipespage = () => {
   const handleToAdd = (item) => {
     // update to array and add item to array
     if (!recipes.includes(item)) {
-      
       setRecipes((prev) => [...prev, item]);
     }
   };
@@ -65,13 +64,13 @@ const Recipespage = () => {
   const deletingRecipe = (id) => {
     console.log(id);
     let newRecipes = recipes.filter((item, index) => {
-      if(item.id != id){
-        return item
+      if (item.id !== id) {
+        return item;
       }
-    }) 
-    
-    setRecipes(newRecipes)
-  }
+    });
+
+    setRecipes(newRecipes);
+  };
 
   return (
     <>
@@ -100,12 +99,15 @@ const Recipespage = () => {
                     name={foods.name}
                     value={foods.name}
                   />
-                  <label className=".labels" for={foods.name}> {foods.name} </label>
+                  <label className=".labels" for={foods.name}>
+                    {" "}
+                    {foods.name}{" "}
+                  </label>
                 </>
               );
             })}
         </div>
-        <div className="cards all_div" >
+        <div className="cards all_div">
           {cards &&
             cards
               .filter((item) => {
@@ -121,15 +123,22 @@ const Recipespage = () => {
                 return (
                   <div key={index} className="card all_div">
                     <p>{item.title}</p>
-                    <img  className="recipe_imgs" src={item.image} alt="" />
+                    <img className="recipe_imgs" src={item.image} alt="" />
                     <div className="all_div">
                       <button className="card_buttons">More</button>
-                      <button className="card_buttons" onClick={() => handleToAdd(item)}>Add</button>
+                      <button
+                        className="card_buttons"
+                        onClick={() => handleToAdd(item)}
+                      >
+                        Add
+                      </button>
                     </div>
                   </div>
                 );
               })}
         </div>
+      </div>
+      <div>
         <MyRecipes recipes={recipes} deletingRecipe={deletingRecipe} />
       </div>
     </>

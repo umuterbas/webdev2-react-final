@@ -9,7 +9,8 @@
 }
 
 .card {
-  background-color: #00b4cc;
+  background-color: white;
+  border-style: solid;
   border-radius: 25px;
   max-width: 18rem;
   height: auto;
@@ -70,4 +71,12 @@
 .card_buttons:hover {
   background-color: white;
   color: #4caf50;
+}
+
+.repice_list {
+  display: flex;
+}
+
+.recipes_list {
+  display: flex;
 }
