@@ -71,6 +71,7 @@ export default function MyFridge() {
 				<WhisperUl id="whisper">
 					{autocomplete.map((item, i) => (
 						<WhisperDiv
+
 							onClick={() => temporaryList(item.id, item.name, item.image)}
 							key={item.id}
 						>
@@ -79,7 +80,7 @@ export default function MyFridge() {
 					))}
 				</WhisperUl>
 			</form>
-			<ListDiv >
+			<ListDiv>
 				{fridgeList.map((item, i) => (
 					<IngredientDiv key={item.id}>
 						<IngredientImg
