@@ -14,7 +14,7 @@ const MyRecipes = ({ recipes, deletingRecipe }) => {
                 <>
                   <li className="recipes_list" key={index}>
                     <p>{item.title}</p>
-                   <i onClick={() => deletingRecipe(item.id)} class="fa-solid fa-trash-can"></i>
+                   <button onClick={() => deletingRecipe(item.id)} className="del_btn">Del</button>
                   </li>
                 </>
               );
