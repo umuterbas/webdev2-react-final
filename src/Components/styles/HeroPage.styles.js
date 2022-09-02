@@ -4,13 +4,11 @@ export const HeroDiv = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-
     background-image: url(images/food.jpg);
     background-size: cover;
-    background-opacity: 0.5;
     width: 100%;
     height: 100vh;
-    background-opacity: 0.5;
+    
 `;
 
 export const NavDiv = styled.div`
