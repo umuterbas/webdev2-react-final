@@ -1,10 +1,11 @@
 import React from "react";
 import "./MyRecipes.css";
+import { Recipes_list, Del_btn, Right_part_uu } from "../../styles/Recipespage.styled";
 
 const MyRecipes = ({ recipes, deletingRecipe }) => {
   return (
     <>
-      <div className="right_part_uu">
+      <Right_part_uu>
         <h2>My Recipes</h2>
 
         <ul>
@@ -12,15 +13,17 @@ const MyRecipes = ({ recipes, deletingRecipe }) => {
             recipes.map((item, index) => {
               return (
                 <>
-                  <li className="recipes_list" key={index}>
+                  <Recipes_list key={index}>
                     <p>{item.title}</p>
-                   <button onClick={() => deletingRecipe(item.id)} className="del_btn">Del</button>
-                  </li>
+                    <Del_btn onClick={() => deletingRecipe(item.id)}>
+                      Del
+                    </Del_btn>
+                  </Recipes_list>
                 </>
               );
             })}
         </ul>
-      </div>
+      </Right_part_uu>
     </>
   );
 };
