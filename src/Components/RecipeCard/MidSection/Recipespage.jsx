@@ -2,7 +2,6 @@
 import fakeDataFridge from "./fakeDataFridge";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import "./Recipespage.css";
 import MyRecipes from "../MyRecipesBar(RightSection)/MyRecipes";
 // import styled from "styled-components";
 

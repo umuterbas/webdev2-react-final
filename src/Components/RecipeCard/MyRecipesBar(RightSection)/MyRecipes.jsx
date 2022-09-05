@@ -1,5 +1,4 @@
 import React from "react";
-import "./MyRecipes.css";
 import { Recipes_list, Del_btn, Right_part_uu } from "../../styles/Recipespage.styled";
 
 const MyRecipes = ({ recipes, deletingRecipe }) => {
