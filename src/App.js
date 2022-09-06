@@ -19,8 +19,8 @@ function App() {
       </AuthContextProvider> 
       {/* <MyRecipes /> */}
       {/* <Test/> */}
-      {/* <Recipespage /> */}
-      {/* <MyFridge /> */}
+      <Recipespage />
+      <MyFridge />
     </div>
   );
 }
